@@ -1,0 +1,50 @@
+
+spring:
+  security:
+#    enabled: true # Default
+#    ignore-uri: /actuator/health/** # Default
+    swagger-enabled: true
+    oauth2:
+      resource-server:
+        azure:
+          issuer-uri: ${AZURE_ISS}
+          jwk-set-uri: ${AZURE_KEYSTORE}
+        forgerock:
+          issuer-uri: ${FORGEROCK_ISS}
+          jwk-set-uri: ${FORGEROCK_KEYSTORE}
+
+
+app:
+  endpoints:
+    test:
+      role: APIScope
+
+
+
+management:
+  metrics:
+    distribution:
+      percentiles[http.server.requests]: 0.90,0.95,0.99
+      percentiles-histogram:
+        http.server.requests: true
+      maximum-expected-value:
+        http.server.requests: 6s
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    prometheus:
+      enabled: true
+    health:
+      show-details: always
+      metrics:
+        enabled: true
+      probes:
+        enabled: true
+      group:
+        liveness:
+          include: diskSpace,ping
+          show-details: always
+    metrics:
+      enabled: true
